@@ -40,6 +40,8 @@ packbudget --help
   The first matching line wins, and files with no match have weight 0.
 - `--ignore PATTERN` ignores files and may be repeated; `--ignore-file FILE` reads one pattern per
   line (empty lines and lines starting with `#` are skipped).
+- `--budget N` is a whole number of tokens; a `k` or `m` after the digits (`8k`, `2M`) multiplies it by
+  1000 or 1000000, so `--budget 8k` means 8000 tokens.
 - The exit code is 0 when everything fits, 1 when at least one file is left out, and 2 on an
   error. Errors are written to standard error as `packbudget: MESSAGE`.
 

@@ -17,15 +17,27 @@ export type Parsed =
       ignoreFile: string | null;
     };
 
+function budgetScale(last: string): number {
+  if (last === "k" || last === "K") {
+    return 1000;
+  }
+  if (last === "m" || last === "M") {
+    return 1000000;
+  }
+  return 1;
+}
+
 function parseBudget(value: string): number {
   const chars = points(value);
-  let ok = chars.length >= 1 && chars.length <= 15;
-  for (const ch of chars) {
+  const scale = budgetScale(chars[chars.length - 1] ?? "");
+  const digits = scale === 1 ? chars : chars.slice(0, -1);
+  let ok = digits.length >= 1 && digits.length <= (scale === 1 ? 15 : 9);
+  for (const ch of digits) {
     if (!isDigit(ch)) {
       ok = false;
     }
   }
-  const budget = ok ? Number(value) : 0;
+  const budget = ok ? Number(digits.join("")) * scale : 0;
   if (!ok || budget < 1) {
     throw new Failure(`--budget needs a whole number of 1 or more, got ${shown(value)}`);
   }
